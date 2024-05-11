@@ -1219,6 +1219,7 @@ static struct device_info boards[] = {
 		.support_list =
 			"SupportList:\r\n"
 			"{product_name:Archer A6,product_ver:2.0.0,special_id:45550000}\r\n"
+			"{product_name:Archer A6,product_ver:2.0.0,special_id:52550000}\r\n"
 			"{product_name:Archer C6,product_ver:2.0.0,special_id:45550000}\r\n"
 			"{product_name:Archer C6,product_ver:2.0.0,special_id:52550000}\r\n"
 			"{product_name:Archer C6,product_ver:2.0.0,special_id:4A500000}\r\n",
@@ -1919,7 +1920,7 @@ static struct device_info boards[] = {
 			"EAP225-Outdoor(TP-Link|UN|AC1200-D):1.0\r\n",
 		.part_trail = PART_TRAIL_NONE,
 		.soft_ver = SOFT_VER_DEFAULT,
-		.soft_ver_compat_level = 1,
+		.soft_ver_compat_level = 2,
 
 		.partitions = {
 			{"fs-uboot", 0x00000, 0x20000},
@@ -1984,7 +1985,7 @@ static struct device_info boards[] = {
 			"EAP225-Outdoor(TP-Link|UN|AC1200-D):3.0 CA,JP\r\n",
 		.part_trail = PART_TRAIL_NONE,
 		.soft_ver = SOFT_VER_DEFAULT,
-		.soft_ver_compat_level = 1,
+		.soft_ver_compat_level = 2,
 
 		.partitions = {
 			{"fs-uboot", 0x00000, 0x20000},
@@ -2159,7 +2160,7 @@ static struct device_info boards[] = {
 	{
 		.id = "EAP615-WALL-V1",
 		.soft_ver = SOFT_VER_DEFAULT,
-		.soft_ver_compat_level = 1,
+		.soft_ver_compat_level = 2,
 		.support_list =
 			"SupportList:\r\n"
 			"EAP615-Wall(TP-Link|UN|AX1800-D):1.0\r\n"
@@ -2761,6 +2762,49 @@ static struct device_info boards[] = {
 		.last_sysupgrade_partition = "file-system"
 	},
 
+	/** Firmware layout for the RE205 v3 */
+	{
+		.id     = "RE205-V3",
+		.vendor = "",
+		.support_list =
+			"SupportList:\n"
+			"{product_name:RE205,product_ver:3.0.0,special_id:00000000}\n"
+			"{product_name:RE205,product_ver:3.0.0,special_id:45550000}\n"
+			"{product_name:RE205,product_ver:3.0.0,special_id:4A500000}\n"
+			"{product_name:RE205,product_ver:3.0.0,special_id:4B520000}\n"
+			"{product_name:RE205,product_ver:3.0.0,special_id:43410000}\n"
+			"{product_name:RE205,product_ver:3.0.0,special_id:41550000}\n"
+			"{product_name:RE205,product_ver:3.0.0,special_id:42520000}\n"
+			"{product_name:RE205,product_ver:3.0.0,special_id:55530000}\n"
+			"{product_name:RE205,product_ver:3.0.0,special_id:41520000}\n"
+			"{product_name:RE205,product_ver:3.0.0,special_id:52550000}\n"
+			"{product_name:RE205,product_ver:3.0.0,special_id:54570000}\n"
+			"{product_name:RE205,product_ver:3.0.0,special_id:45530000}\n"
+			"{product_name:RE205,product_ver:3.0.0,special_id:45470000}\n",
+		.part_trail = 0x00,
+		.soft_ver = SOFT_VER_TEXT("soft_ver:1.1.0\n"),
+
+		.partitions = {
+			{"fs-uboot", 0x00000, 0x20000},
+			{"firmware", 0x20000, 0x7a0000},
+			{"partition-table", 0x7c0000, 0x02000},
+			{"default-mac", 0x7c2000, 0x00020},
+			{"pin", 0x7c2100, 0x00020},
+			{"product-info", 0x7c3100, 0x01000},
+			{"soft-version", 0x7c4200, 0x01000},
+			{"support-list", 0x7c5200, 0x01000},
+			{"profile", 0x7c6200, 0x08000},
+			{"config-info", 0x7ce200, 0x00400},
+			{"user-config", 0x7d0000, 0x10000},
+			{"default-config", 0x7e0000, 0x10000},
+			{"radio", 0x7f0000, 0x10000},
+			{NULL, 0, 0}
+		},
+
+		.first_sysupgrade_partition = "os-image",
+		.last_sysupgrade_partition = "file-system"
+	},
+
 	/** Firmware layout for the RE220 v2 */
 	{
 		.id     = "RE220-V2",
@@ -2968,6 +3012,44 @@ static struct device_info boards[] = {
 		.soft_ver = SOFT_VER_DEFAULT,
 
 		/* We're using a dynamic kernel/rootfs split here */
+		.partitions = {
+			{"fs-uboot", 0x00000, 0x20000},
+			{"firmware", 0x20000, 0x5e0000},
+			{"partition-table", 0x600000, 0x02000},
+			{"default-mac", 0x610000, 0x00020},
+			{"pin", 0x610100, 0x00020},
+			{"product-info", 0x611100, 0x01000},
+			{"soft-version", 0x620000, 0x01000},
+			{"support-list", 0x621000, 0x01000},
+			{"profile", 0x622000, 0x08000},
+			{"user-config", 0x630000, 0x10000},
+			{"default-config", 0x640000, 0x10000},
+			{"radio", 0x7f0000, 0x10000},
+			{NULL, 0, 0}
+		},
+
+		.first_sysupgrade_partition = "os-image",
+		.last_sysupgrade_partition = "file-system"
+	},
+
+	/** Firmware layout for the RE365 v1 */
+	{
+		.id     = "RE365",
+		.vendor = "",
+		.support_list =
+			"SupportList:\r\n"
+			"{product_name:RE365,product_ver:1.0.0,special_id:45550000}\r\n"
+			"{product_name:RE365,product_ver:1.0.0,special_id:55530000}\r\n"
+			"{product_name:RE365,product_ver:1.0.0,special_id:4a500000}\r\n"
+			"{product_name:RE365,product_ver:1.0.0,special_id:42520000}\r\n"
+			"{product_name:RE365,product_ver:1.0.0,special_id:4b520000}\r\n"
+			"{product_name:RE365,product_ver:1.0.0,special_id:41550000}\r\n"
+			"{product_name:RE365,product_ver:1.0.0,special_id:43410000}\r\n"
+			"{product_name:RE365,product_ver:1.0.0,special_id:54570000}\r\n"
+			"{product_name:RE365,product_ver:1.0.0,special_id:41530000}\r\n",
+		.part_trail = 0x00,
+		.soft_ver = SOFT_VER_DEFAULT,
+
 		.partitions = {
 			{"fs-uboot", 0x00000, 0x20000},
 			{"firmware", 0x20000, 0x5e0000},
@@ -4233,6 +4315,10 @@ static int firmware_info(const char *input)
 			printf("Version: %d.%d.%d\n", s->version_major, s->version_minor, s->version_patch);
 			printf("Date: %02x%02x-%02x-%02x\n", s->year_hi, s->year_lo, s->month, s->day);
 			printf("Revision: %d\n", ntohl(s->rev));
+
+			if (data_len >= offsetof(struct soft_version, compat_level)) {
+				printf("Compatibility level: %d\n", ntohl(s->compat_level));
+			}
 		} else {
 			printf("Failed to parse data\n");
 		}

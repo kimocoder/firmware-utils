@@ -82,6 +82,14 @@ typedef struct {
 	GUID_INIT( 0x0fc63daf, 0x8483, 0x4772, \
 			0x8e, 0x79, 0x3d, 0x69, 0xd8, 0x47, 0x7d, 0xe4)
 
+#define GUID_PARTITION_SIFIVE_SPL \
+	GUID_INIT( 0x5b193300, 0xfc78, 0x40cd, \
+			0x80, 0x02, 0xe8, 0x6c, 0x45, 0x58, 0x0b, 0x47)
+
+#define GUID_PARTITION_SIFIVE_UBOOT \
+	GUID_INIT( 0x2e54b353, 0x1271, 0x4842, \
+			0x80, 0x6f, 0xe4, 0x36, 0xd6, 0xaf, 0x69, 0x85)
+
 #define GPT_HEADER_SIZE         92
 #define GPT_ENTRY_SIZE          128
 #define GPT_ENTRY_MAX           128
@@ -276,6 +284,19 @@ static inline bool parse_gpt_parttype(const char *type, struct partinfo *part)
 			      (1ULL << 56);  /* success=1 */
 		return true;
 	}
+
+	if (!strcmp(type, "sifiveu_spl")) {
+		part->has_guid = true;
+		part->guid = GUID_PARTITION_SIFIVE_SPL;
+		return true;
+	}
+
+	if (!strcmp(type, "sifiveu_uboot")) {
+		part->has_guid = true;
+		part->guid = GUID_PARTITION_SIFIVE_UBOOT;
+		return true;
+	}
+
 	return false;
 }
 
@@ -548,7 +569,7 @@ fail:
 static void usage(char *prog)
 {
 	fprintf(stderr, "Usage: %s [-v] [-n] [-g] -h <heads> -s <sectors> -o <outputfile>\n"
-			"          [-a 0..4] [-l <align kB>] [-G <guid>]\n"
+			"          [-a <part number>] [-l <align kB>] [-G <guid>]\n"
 			"          [[-t <type> | -T <GPT part type>] [-r] [-N <name>] -p <size>[@<start>]...] \n", prog);
 	exit(EXIT_FAILURE);
 }
@@ -647,8 +668,6 @@ int main (int argc, char **argv)
 			break;
 		case 'a':
 			active = (int)strtoul(optarg, NULL, 0);
-			if ((active < 0) || (active > 4))
-				active = 0;
 			break;
 		case 'l':
 			kb_align = (int)strtoul(optarg, NULL, 0) * 2;
@@ -678,6 +697,11 @@ int main (int argc, char **argv)
 	argc -= optind;
 	if (argc || (!use_guid_partition_table && ((heads <= 0) || (sectors <= 0))) || !filename)
 		usage(argv[0]);
+
+	if ((use_guid_partition_table && active > GPT_ENTRY_MAX) ||
+	    (!use_guid_partition_table && active > MBR_ENTRY_MAX) ||
+	    active < 0)
+		active  = 0;
 
 	if (use_guid_partition_table) {
 		heads = 254;
